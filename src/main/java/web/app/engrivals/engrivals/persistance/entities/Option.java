@@ -12,7 +12,7 @@ public class Option {
 
     private String name;
 
-    @Column(name = "is_correct")
+    @Column(name = "is_correct", columnDefinition = "TINYINT")
     private Boolean isCorrect;
 
     @ManyToOne

@@ -17,7 +17,7 @@ public class Question {
     private CategoryEntity categoryEntity;
 
     @ManyToOne
-    @JoinColumn(name = "englishlevel_id_level", insertable = false, updatable = false)
+    @JoinColumn(name = "level_id_level", insertable = false, updatable = false)
     private EnglishLevel englishLevel;
 
     public Integer getIdQuestion() {

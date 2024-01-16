@@ -3,7 +3,7 @@ package web.app.engrivals.engrivals.persistance.entities;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "englishlevel")
+@Table(name = "level")
 public class EnglishLevel {
 
     @Id
