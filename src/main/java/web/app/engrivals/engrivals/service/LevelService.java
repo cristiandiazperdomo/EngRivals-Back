@@ -6,6 +6,7 @@ import web.app.engrivals.engrivals.persistance.entities.EnglishLevel;
 import web.app.engrivals.engrivals.persistance.repository.LevelRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -15,5 +16,9 @@ public class LevelService {
 
     public List<EnglishLevel> getAll(){
         return (List<EnglishLevel>) levelRepository.findAll();
+    }
+
+    public Optional<EnglishLevel> getLevel(int idLevel){
+        return levelRepository.findById(idLevel);
     }
 }
