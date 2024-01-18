@@ -7,7 +7,7 @@ import org.hibernate.annotations.UuidGenerator;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "user")
+@Table(name = "user", uniqueConstraints = {@UniqueConstraint(columnNames = {"email"})})
 public class UserEntity {
   @Id
   @UuidGenerator
@@ -24,7 +24,7 @@ public class UserEntity {
   private LocalDate creation_date;
   private int score;
   @ManyToOne
-  @JoinColumn(name = "level_id_level", insertable = false, updatable = false)
+  @JoinColumn(name = "level_id_level")
   private EnglishLevel englishLevel_id_level;
 
   public UserEntity() {
