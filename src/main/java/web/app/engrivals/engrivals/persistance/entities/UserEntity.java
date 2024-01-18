@@ -1,5 +1,6 @@
 package web.app.engrivals.engrivals.persistance.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.hibernate.annotations.UuidGenerator;
 
@@ -15,6 +16,7 @@ public class UserEntity {
   private String name;
   private String profile_url;
   private String email;
+  @JsonIgnore
   private String password;
   @Column(columnDefinition = "DATE")
   private LocalDate birthdate;
@@ -25,19 +27,20 @@ public class UserEntity {
   @JoinColumn(name = "level_id_level", insertable = false, updatable = false)
   private EnglishLevel englishLevel_id_level;
 
-  // --------------------------------------
   public UserEntity() {
+    this.creation_date = LocalDate.now();
+    this.score = 0;
   }
 
-  public UserEntity(String id, String name, String profile_url, String email, String password, LocalDate birthdate, LocalDate creation_date, int score, EnglishLevel englishLevel_id_level) {
+  public UserEntity(String id, String name, String profile_url, String email, String password, LocalDate birthdate, EnglishLevel englishLevel_id_level) {
     this.id = id;
     this.name = name;
     this.profile_url = profile_url;
     this.email = email;
     this.password = password;
     this.birthdate = birthdate;
-    this.creation_date = creation_date;
-    this.score = score;
+    this.creation_date = LocalDate.now();
+    this.score = 0;
     this.englishLevel_id_level = englishLevel_id_level;
   }
 
@@ -112,4 +115,11 @@ public class UserEntity {
   public void setEnglishLevel_id_level(EnglishLevel englishLevel_id_level) {
     this.englishLevel_id_level = englishLevel_id_level;
   }
+
+    @Override
+    public String toString() {
+        return "UserEntity{" + "id=" + id + ", name=" + name + ", profile_url=" + profile_url + ", email=" + email + ", password=" + password + ", birthdate=" + birthdate + ", creation_date=" + creation_date + ", score=" + score + ", englishLevel_id_level=" + englishLevel_id_level + '}';
+    }
+  
+  
 }

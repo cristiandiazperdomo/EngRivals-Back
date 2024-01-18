@@ -10,8 +10,8 @@ public class CategoryEntity {
   private int id_category;
   private String name;
 
-//----------------------------
   public CategoryEntity() {}
+  
   public CategoryEntity(int id_category, String name) {
     this.id_category = id_category;
     this.name = name;
