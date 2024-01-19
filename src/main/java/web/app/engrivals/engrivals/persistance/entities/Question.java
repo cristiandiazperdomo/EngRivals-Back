@@ -51,4 +51,10 @@ public class Question {
     public void setEnglishLevel(EnglishLevel englishLevel) {
         this.englishLevel = englishLevel;
     }
+
+    @Override
+    public String toString() {
+        return "Question{" + "idQuestion=" + idQuestion + ", title=" + title + ", categoryEntity=" + categoryEntity + ", englishLevel=" + englishLevel + '}';
+    }
+    
 }

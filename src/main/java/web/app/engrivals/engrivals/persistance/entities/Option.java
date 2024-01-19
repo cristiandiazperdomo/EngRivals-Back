@@ -9,12 +9,9 @@ public class Option {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_options")
     private Integer idOption;
-
     private String name;
-
     @Column(name = "is_correct", columnDefinition = "TINYINT")
     private Boolean isCorrect;
-
     @ManyToOne
     @JoinColumn(name = "question_id_question", insertable = false, updatable = false)
     private Question question;
