@@ -12,9 +12,13 @@ import web.app.engrivals.engrivals.service.QuestionService;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/v1/api/questions")
+@CrossOrigin("*")
 public class QuestionController {
     @Autowired
     private QuestionService questionService;
@@ -27,6 +31,16 @@ public class QuestionController {
     @GetMapping("/{id}")
     public ResponseEntity<Optional<Question>> getQuestion(@PathVariable("id") int idQuestion){
         return new ResponseEntity<>(questionService.getQuestion(idQuestion), HttpStatus.OK);
+    }
+    
+    @PostMapping
+    public ResponseEntity<Question> save(@RequestBody Question questionDTO) {
+        return new ResponseEntity<>(questionService.save(questionDTO), HttpStatus.OK);
+    }
+    
+    @GetMapping("/build")
+    public void build() {
+        questionService.buildingScript();
     }
 
 

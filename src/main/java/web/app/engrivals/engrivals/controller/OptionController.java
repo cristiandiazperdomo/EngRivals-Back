@@ -18,11 +18,6 @@ public class OptionController {
     @Autowired
     private OptionService optionService;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<List<Option>> getAll(@PathVariable("id") int idQuestion){
-        return new ResponseEntity<>(optionService.getOptions(idQuestion), HttpStatus.OK);
-    }
-
     @GetMapping("/option/{id}")
     public ResponseEntity<Boolean> confirmAnswer(@PathVariable("id") int idOption){
         return new ResponseEntity<>(optionService.confirmAnswer(idOption), HttpStatus.OK);

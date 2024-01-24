@@ -31,4 +31,10 @@ public class EnglishLevel {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return "EnglishLevel{" + "idLevel=" + idLevel + ", name=" + name + '}';
+    }
+    
 }

@@ -18,6 +18,9 @@ public class QuestionN {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "question_id")
     private List<OptionN> options;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "question_id")
+    private List<Answer> answers;
     @ManyToOne
     @JoinColumn(name = "challenge_id")
     private Challenge challenge;
@@ -55,10 +58,25 @@ public class QuestionN {
         this.options = options;
     }
 
+    public List<Answer> getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(List<Answer> answer) {
+        this.answers = answer;
+    }
+
+    public Challenge getChallenge() {
+        return challenge;
+    }
+
+    public void setChallenge(Challenge challenge) {
+        this.challenge = challenge;
+    }
+
     @Override
     public String toString() {
-        return "QuestionN{" + "id=" + id + ", title=" + title + ", options=" + options + '}';
+        return "QuestionN{" + "id=" + id + ", title=" + title + ", options=" + options + ", answer=" + answers + ", challenge=" + challenge + '}';
     }
-    
-    
+
 }

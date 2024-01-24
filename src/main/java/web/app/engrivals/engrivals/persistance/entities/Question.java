@@ -1,6 +1,7 @@
 package web.app.engrivals.engrivals.persistance.entities;
 
 import jakarta.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "question")
@@ -9,16 +10,27 @@ public class Question {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_question")
     private Integer idQuestion;
-
     private String title;
-
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "question_id")
+    private List<Option> options;
     @ManyToOne
-    @JoinColumn(name = "category_id_category", insertable = false, updatable = false)
+    @JoinColumn(name = "category_id_category")
     private CategoryEntity categoryEntity;
-
     @ManyToOne
-    @JoinColumn(name = "level_id_level", insertable = false, updatable = false)
+    @JoinColumn(name = "level_id_level")
     private EnglishLevel englishLevel;
+
+    public Question() {
+    }
+
+    public Question(Integer idQuestion, String title, List<Option> options, CategoryEntity categoryEntity, EnglishLevel englishLevel) {
+        this.idQuestion = idQuestion;
+        this.title = title;
+        this.options = options;
+        this.categoryEntity = categoryEntity;
+        this.englishLevel = englishLevel;
+    }
 
     public Integer getIdQuestion() {
         return idQuestion;
@@ -34,6 +46,14 @@ public class Question {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public List<Option> getOptions() {
+        return options;
+    }
+
+    public void setOptions(List<Option> options) {
+        this.options = options;
     }
 
     public CategoryEntity getCategoryEntity() {
@@ -54,7 +74,7 @@ public class Question {
 
     @Override
     public String toString() {
-        return "Question{" + "idQuestion=" + idQuestion + ", title=" + title + ", categoryEntity=" + categoryEntity + ", englishLevel=" + englishLevel + '}';
+        return "Question{" + "idQuestion=" + idQuestion + ", title=" + title + ", options=" + options + ", categoryEntity=" + categoryEntity + ", englishLevel=" + englishLevel + '}';
     }
-    
+
 }

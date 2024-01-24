@@ -12,12 +12,8 @@ public class OptionService {
     @Autowired
     private OptionRepository optionRepository;
 
-    public List<Option> getOptions(int idQuestion){
-        return optionRepository.findByQuestionIdQuestion(idQuestion);
-    }
-
     public Boolean confirmAnswer(int idOption){
-        return optionRepository.findById(idOption).get().getCorrect();
+        return optionRepository.findById(idOption).get().getIsCorrect();
     }
 
     public Option save(Option option){

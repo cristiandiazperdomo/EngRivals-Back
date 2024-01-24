@@ -15,10 +15,4 @@ public interface ChallengeRepository extends JpaRepository<Challenge, String>{
     @Modifying
     @Query("DELETE FROM Challenge c WHERE TIMESTAMPDIFF(MINUTE, c.creationTime, :time) > 20")
     void deleteByCreationTime(@Param("time") LocalDateTime time);
-    
-    /**
-      DELETE FROM challenge c WHERE TIMESTAMPDIFF(MINUTE, c.creation_time, "2024-01-19 17:45:25") > 1;
-
-     
-     */
 }
