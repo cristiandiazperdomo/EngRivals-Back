@@ -57,30 +57,30 @@ public class ChallengeService {
         challenge.setTitle(level.get().getName() + ": " + category.get().getName());
         
         List<Question> questions = questionRepository.findByCategoryAndEnglishLevel(categoryId, levelId);
-        List<QuestionN> questionWithOptions = new ArrayList<>();
+       
+        List<QuestionN> questionsN = new ArrayList<>();
         
         for (Question question : questions) {
             QuestionN questionN = new QuestionN();
             
-            List<Option> options = optionRepository.findByQuestionIdQuestion(question.getIdQuestion());
-            List<OptionN> optionsWithQuestionId = new ArrayList<>();
-            
-            for (Option option : options) {
+            List<OptionN> optionsN = new ArrayList<>();
+                    
+            for (Option option : question.getOptions()) {
                 OptionN optionN = new OptionN();
                 
-                optionN.setIsCorrect(option.getCorrect());
+                optionN.setIsCorrect(option.getIsCorrect());
                 optionN.setName(option.getName());
                 
-                optionsWithQuestionId.add(optionN);
+                optionsN.add(optionN);
             }
             
             questionN.setTitle(question.getTitle());
-            questionN.setOptions(optionsWithQuestionId);
+            questionN.setOptions(optionsN);
             
-            questionWithOptions.add(questionN);
+            questionsN.add(questionN);
         }
         
-        challenge.setQuestions(questionWithOptions);
+        challenge.setQuestions(questionsN);
         
         challengeRepository.save(challenge);
         
@@ -91,4 +91,15 @@ public class ChallengeService {
     public void deleteOldChallenge() {
         challengeRepository.deleteByCreationTime(LocalDateTime.now());
     }
+    
+    public Challenge findById(String id) {
+        Optional<Challenge> response = challengeRepository.findById(id);
+        
+        if (!response.isPresent()) {
+            throw new EntityNotFoundException("No se encontro un desafío con ese ID: " + id);
+        }
+        
+        return response.get();
+    }
+    
 }

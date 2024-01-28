@@ -1,5 +1,7 @@
 package web.app.engrivals.engrivals.persistance.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 @Entity
@@ -11,10 +13,22 @@ public class Option {
     private Integer idOption;
     private String name;
     @Column(name = "is_correct", columnDefinition = "TINYINT")
+    @JsonProperty("isCorrect")
     private Boolean isCorrect;
     @ManyToOne
-    @JoinColumn(name = "question_id_question", insertable = false, updatable = false)
+    @JoinColumn(name = "question_id")
+    @JsonIgnore
     private Question question;
+
+    public Option() {
+    }
+
+    public Option(Integer idOption, String name, Boolean isCorrect, Question question) {
+        this.idOption = idOption;
+        this.name = name;
+        this.isCorrect = isCorrect;
+        this.question = question;
+    }
 
     public Integer getIdOption() {
         return idOption;
@@ -32,12 +46,12 @@ public class Option {
         this.name = name;
     }
 
-    public Boolean getCorrect() {
+    public Boolean getIsCorrect() {
         return isCorrect;
     }
 
-    public void setCorrect(Boolean correct) {
-        isCorrect = correct;
+    public void setIsCorrect(Boolean isCorrect) {
+        this.isCorrect = isCorrect;
     }
 
     public Question getQuestion() {
@@ -47,4 +61,5 @@ public class Option {
     public void setQuestion(Question question) {
         this.question = question;
     }
+
 }

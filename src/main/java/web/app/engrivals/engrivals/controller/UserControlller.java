@@ -4,8 +4,6 @@
  */
 package web.app.engrivals.engrivals.controller;
 
-import java.time.LocalDate;
-import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,7 +19,7 @@ import web.app.engrivals.engrivals.persistance.entities.UserEntity;
 import web.app.engrivals.engrivals.service.UserService;
 
 @RestController
-@RequestMapping("/v1/api/user")
+@RequestMapping("/v1/api/users")
 @CrossOrigin("*")
 public class UserControlller {
     @Autowired

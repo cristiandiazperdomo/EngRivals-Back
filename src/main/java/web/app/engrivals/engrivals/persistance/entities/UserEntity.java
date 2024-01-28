@@ -22,7 +22,7 @@ public class UserEntity {
   private LocalDate birthdate;
   @Column(columnDefinition = "DATETIME")
   private LocalDate creation_date;
-  private int score;
+  private Integer score;
   @ManyToOne
   @JoinColumn(name = "level_id_level")
   private EnglishLevel englishLevel_id_level;
@@ -100,13 +100,13 @@ public class UserEntity {
     this.creation_date = creation_date;
   }
 
-  public int getScore() {
-    return score;
-  }
+    public Integer getScore() {
+        return score;
+    }
 
-  public void setScore(int score) {
-    this.score = score;
-  }
+    public void setScore(Integer score) {
+        this.score = score;
+    }
 
   public EnglishLevel getEnglishLevel_id_level() {
     return englishLevel_id_level;
