@@ -1,10 +1,9 @@
 package web.app.engrivals.engrivals.persistance.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import org.hibernate.annotations.UuidGenerator;
 
 @Entity
@@ -14,6 +13,7 @@ public class OptionN {
     private String id;
     private String name;
     @Column(columnDefinition = "TINYINT")
+    @JsonIgnore
     private Boolean isCorrect;
 
     public OptionN() {

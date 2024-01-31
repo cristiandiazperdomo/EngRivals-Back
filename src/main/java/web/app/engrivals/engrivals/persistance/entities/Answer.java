@@ -1,5 +1,7 @@
 package web.app.engrivals.engrivals.persistance.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -14,10 +16,12 @@ public class Answer {
     private String id;    
     private String answer;
     @Column(columnDefinition = "TINYINT")
+    @JsonProperty("isCorrect")
     private Boolean isCorrect;
     private String userId;
     @ManyToOne
     @JoinColumn(name = "question_id")
+    @JsonIgnore
     private QuestionN questionId;
 
     public Answer() {
@@ -71,7 +75,7 @@ public class Answer {
 
     @Override
     public String toString() {
-        return "Answer{" + "id=" + id + ", answer=" + answer + ", isCorrect=" + isCorrect + ", userId=" + userId + ", questionId=" + questionId + '}';
+        return "Answer{" + "id=" + id + ", answer=" + answer + ", isCorrect=" + isCorrect + ", userId=" + userId + '}';
     }
 
 }

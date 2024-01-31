@@ -1,5 +1,6 @@
 package web.app.engrivals.engrivals.persistance.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -23,6 +24,7 @@ public class QuestionN {
     private List<Answer> answers;
     @ManyToOne
     @JoinColumn(name = "challenge_id")
+    @JsonIgnore
     private Challenge challenge;
 
     public QuestionN() {
@@ -76,7 +78,7 @@ public class QuestionN {
 
     @Override
     public String toString() {
-        return "QuestionN{" + "id=" + id + ", title=" + title + ", options=" + options + ", answer=" + answers + ", challenge=" + challenge + '}';
+        return "QuestionN{" + "id=" + id + ", title=" + title + ", options=" + options + ", answer=" + answers + '}';
     }
 
 }

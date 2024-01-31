@@ -9,6 +9,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import web.app.engrivals.engrivals.persistance.entities.Answer;
 import web.app.engrivals.engrivals.persistance.entities.CategoryEntity;
 import web.app.engrivals.engrivals.persistance.entities.Challenge;
 import web.app.engrivals.engrivals.persistance.entities.EnglishLevel;
@@ -81,6 +82,58 @@ public class ChallengeService {
         }
         
         challenge.setQuestions(questionsN);
+        
+        challengeRepository.save(challenge);
+        
+        return challenge;
+    }
+    
+    public Challenge receiveAnswer(String challengeId, QuestionN questionN) {
+        Optional<Challenge> response = challengeRepository.findById(challengeId);
+        
+        if (!response.isPresent()) {
+            throw new EntityNotFoundException("No se encontro un desafío con ese ID: " + challengeId);
+        }
+        
+        Challenge challenge = response.get();
+        
+        for (QuestionN question : challenge.getQuestions()) {
+            if (question.getId().equals(questionN.getId())) {
+                List<Answer> answers = question.getAnswers();
+                
+                if (answers.size() == 0) {
+                    Boolean isRight = false;
+                            
+                    for (OptionN optionN : question.getOptions()) {
+                        System.out.println("OPTIONN: " + optionN);
+                        if (optionN.getIsCorrect() && optionN.getName().equals(questionN.getAnswers().get(0).getAnswer())) {
+                            System.out.println("LLEGuE: " + optionN);
+                            isRight = true;
+                        }
+                    }
+                     
+                    System.out.println(isRight);
+                    questionN.getAnswers().get(0).setIsCorrect(isRight);
+                    answers.add(questionN.getAnswers().get(0));
+                } else {
+                    Boolean hasAlreadyAnswer = false;
+                    Answer saveAnswer = null;
+                    
+                    for (Answer answer : answers) {
+                        for (Answer newAnswer : questionN.getAnswers()) {
+                            if (answer.getUserId().equals(newAnswer.getUserId())) {
+                                hasAlreadyAnswer = true;
+                                saveAnswer = newAnswer;
+                                saveAnswer.setIsCorrect(answer.getIsCorrect());
+                            }
+                        }
+                    }
+                    
+                    if (!hasAlreadyAnswer) answers.add(saveAnswer);
+                }
+                question.setAnswers(answers);
+            }
+        }
         
         challengeRepository.save(challenge);
         
