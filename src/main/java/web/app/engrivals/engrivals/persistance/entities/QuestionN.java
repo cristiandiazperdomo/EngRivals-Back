@@ -16,12 +16,14 @@ public class QuestionN {
     @UuidGenerator
     private String id;
     private String title;
+    private String typeOfExercise;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "question_id")
     private List<OptionN> options;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "question_id")
     private List<Answer> answers;
+    private Integer originQuestionId;
     @ManyToOne
     @JoinColumn(name = "challenge_id")
     @JsonIgnore
@@ -30,10 +32,14 @@ public class QuestionN {
     public QuestionN() {
     }
 
-    public QuestionN(String id, String title, List<OptionN> options) {
+    public QuestionN(String id, String title, String typeOfExercise, List<OptionN> options, List<Answer> answers, Integer originQuestionId, Challenge challenge) {
         this.id = id;
         this.title = title;
+        this.typeOfExercise = typeOfExercise;
         this.options = options;
+        this.answers = answers;
+        this.originQuestionId = originQuestionId;
+        this.challenge = challenge;
     }
 
     public String getId() {
@@ -52,6 +58,14 @@ public class QuestionN {
         this.title = title;
     }
 
+    public String getTypeOfExercise() {
+        return typeOfExercise;
+    }
+
+    public void setTypeOfExercise(String typeOfExercise) {
+        this.typeOfExercise = typeOfExercise;
+    }
+
     public List<OptionN> getOptions() {
         return options;
     }
@@ -64,8 +78,8 @@ public class QuestionN {
         return answers;
     }
 
-    public void setAnswers(List<Answer> answer) {
-        this.answers = answer;
+    public void setAnswers(List<Answer> answers) {
+        this.answers = answers;
     }
 
     public Challenge getChallenge() {
@@ -76,9 +90,17 @@ public class QuestionN {
         this.challenge = challenge;
     }
 
-    @Override
-    public String toString() {
-        return "QuestionN{" + "id=" + id + ", title=" + title + ", options=" + options + ", answer=" + answers + '}';
+    public Integer getOriginQuestionId() {
+        return originQuestionId;
     }
 
+    public void setOriginQuestionId(Integer originQuestionId) {
+        this.originQuestionId = originQuestionId;
+    }
+
+    @Override
+    public String toString() {
+        return "QuestionN{" + "id=" + id + ", title=" + title + ", typeOfExercise=" + typeOfExercise + ", options=" + options + ", answers=" + answers + ", originQuestionId=" + originQuestionId + '}';
+    }
+    
 }

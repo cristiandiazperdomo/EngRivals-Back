@@ -14,11 +14,7 @@ public class QuestionService {
     @Autowired
     private QuestionRepository questionRepository;
 
-    public List<Question> getQuestions(int id_category, int id_level){
-        return questionRepository.findByCategoryAndEnglishLevel(id_category, id_level);
-    }
-
-    public Optional<Question> getQuestion(int idQuestion){
+    public Optional<Question> getQuestion(Integer idQuestion){
         return questionRepository.findById(idQuestion);
     }
 
@@ -38,13 +34,14 @@ public class QuestionService {
         System.out.println("SET foreign_key_checks = 0;");
         for (Question question : questions) {
             if (question.getOptions().isEmpty()) return;
+            //if (question.getOptions().size() <= 2) return;
             
             System.out.println("");
             System.out.println("");
             String insertQuestion = """
-        INSERT INTO question (title, category_id_category, level_id_level) 
-        VALUES ("%s", %d, %d);
-        """.formatted(question.getTitle(), question.getCategoryEntity().getId_category(), question.getEnglishLevel().getIdLevel());
+        INSERT INTO question (title, type_of_exercise, category_id_category, level_id_level) 
+        VALUES ("%s", "%s", %d, %d);
+        """.formatted(question.getTitle(), question.getTypeOfExercise(), question.getCategoryEntity().getId_category(), question.getEnglishLevel().getIdLevel());
             System.out.println(insertQuestion);
             System.out.println("");
             System.out.println("-- Obtener el ID de la pregunta recién insertada");

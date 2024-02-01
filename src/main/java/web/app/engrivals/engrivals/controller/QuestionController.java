@@ -22,12 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class QuestionController {
     @Autowired
     private QuestionService questionService;
-
-    @GetMapping("/{id_category}/{id_level}")
-    public ResponseEntity<List<Question>> getAll(@PathVariable("id_category") int idCategory,@PathVariable("id_level") int idLevel){
-        return new ResponseEntity<>(questionService.getQuestions(idCategory,idLevel), HttpStatus.OK);
-    }
-
+    
     @GetMapping("/{id}")
     public ResponseEntity<Optional<Question>> getQuestion(@PathVariable("id") int idQuestion){
         return new ResponseEntity<>(questionService.getQuestion(idQuestion), HttpStatus.OK);
