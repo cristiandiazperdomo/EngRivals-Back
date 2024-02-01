@@ -23,7 +23,6 @@ public class ChallengeController {
     
     @PostMapping("/{category_id}/{english_level_id}")
     public Challenge create(@PathVariable("category_id") Integer category_id, @PathVariable("english_level_id") Integer english_level_id, @RequestBody HashMap<String, Boolean> conditions) {
-        System.out.println("CONDITION: " + conditions.get("isTheBrowserCompatibleWithAudio"));
         return challengeService.create(category_id, english_level_id, conditions.get("isTheBrowserCompatibleWithAudio"));
     }
     

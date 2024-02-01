@@ -108,8 +108,6 @@ public class ChallengeService {
             
             questionN.setOptions(optionsN);
             
-            if (questionN.getTypeOfExercise().equals("writing")) System.out.println("QUESTIONN: " + questionN);
-            
             questionsN.add(questionN);
         }
         
@@ -166,7 +164,6 @@ public class ChallengeService {
                 }
                 question.setAnswers(answers);
                 
-                System.out.println("Question: " + question);
             }
         }
         
