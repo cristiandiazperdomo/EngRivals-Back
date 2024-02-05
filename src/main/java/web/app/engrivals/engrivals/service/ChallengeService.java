@@ -40,7 +40,7 @@ public class ChallengeService {
     @Autowired
     CategoryRepository categoryRepository;
     
-    public Challenge create(Integer categoryId, Integer levelId) {
+    public Challenge create(Integer categoryId, Integer levelId, Boolean isTheBrowserCompatibleWithAudio) {
         Challenge challenge = new Challenge();
         
         Optional<CategoryEntity> category = categoryRepository.findById(categoryId);
@@ -57,25 +57,55 @@ public class ChallengeService {
         
         challenge.setTitle(level.get().getName() + ": " + category.get().getName());
         
-        List<Question> questions = questionRepository.findByCategoryAndEnglishLevel(categoryId, levelId);
+        List<Question> questions;
+        
+        if (isTheBrowserCompatibleWithAudio) {
+            questions = questionRepository.findByCategoryEnglishLevelAndNoAudio(categoryId, levelId);
+        } else {
+            questions = questionRepository.findByCategoryEnglishLevel(categoryId, levelId);
+        }
        
         List<QuestionN> questionsN = new ArrayList<>();
         
         for (Question question : questions) {
             QuestionN questionN = new QuestionN();
             
+            if (question.getTypeOfExercise().equals("translation")) {
+                int randomNumber = (int) (Math.random() * 5 + 1);
+                
+                questionN.setTypeOfExercise(question.getTypeOfExercise());
+                if (randomNumber == 3) questionN.setTypeOfExercise("writing");
+            } else {
+                questionN.setTypeOfExercise(question.getTypeOfExercise());
+            }
+                
+            questionN.setOriginQuestionId(question.getIdQuestion());
+            
             List<OptionN> optionsN = new ArrayList<>();
                     
             for (Option option : question.getOptions()) {
                 OptionN optionN = new OptionN();
+                if (questionN.getTypeOfExercise().equals("writing")) {
+                    if (option.getIsCorrect()) {
+                        optionN.setIsCorrect(option.getIsCorrect());
+                        optionN.setName(option.getName());
+                        optionsN.add(optionN);
+                    }
+                } else if (questionN.getTypeOfExercise().equals("open question")) { 
+                    optionN.setVisibleIsCorrect(option.getIsCorrect());
+                    optionN.setIsCorrect(option.getIsCorrect());
+                    optionN.setName(option.getName());
+                    optionsN.add(optionN);
+                } else if (questionN.getTypeOfExercise().equals("translation")) { 
+                    optionN.setIsCorrect(option.getIsCorrect());
+                    optionN.setName(option.getName());
+                    optionsN.add(optionN);
+                }
                 
-                optionN.setIsCorrect(option.getIsCorrect());
-                optionN.setName(option.getName());
-                
-                optionsN.add(optionN);
             }
             
             questionN.setTitle(question.getTitle());
+            
             questionN.setOptions(optionsN);
             
             questionsN.add(questionN);
@@ -91,6 +121,7 @@ public class ChallengeService {
     public Challenge receiveAnswer(String challengeId, QuestionN questionN) {
         Optional<Challenge> response = challengeRepository.findById(challengeId);
         
+        
         if (!response.isPresent()) {
             throw new EntityNotFoundException("No se encontro un desafío con ese ID: " + challengeId);
         }
@@ -103,17 +134,17 @@ public class ChallengeService {
                 
                 if (answers.size() == 0) {
                     Boolean isRight = false;
-                            
+         
                     for (OptionN optionN : question.getOptions()) {
-                        System.out.println("OPTIONN: " + optionN);
-                        if (optionN.getIsCorrect() && optionN.getName().equals(questionN.getAnswers().get(0).getAnswer())) {
-                            System.out.println("LLEGuE: " + optionN);
-                            isRight = true;
+                        if (optionN.getIsCorrect()) {
+                            if (optionN.getName().equals(questionN.getAnswers().get(0).getAnswer())) {
+                                isRight = true;
+                            }
                         }
                     }
-                     
-                    System.out.println(isRight);
+                    
                     questionN.getAnswers().get(0).setIsCorrect(isRight);
+                    
                     answers.add(questionN.getAnswers().get(0));
                 } else {
                     Boolean hasAlreadyAnswer = false;
@@ -132,6 +163,7 @@ public class ChallengeService {
                     if (!hasAlreadyAnswer) answers.add(saveAnswer);
                 }
                 question.setAnswers(answers);
+                
             }
         }
         

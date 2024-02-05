@@ -11,6 +11,7 @@ public class Question {
     @Column(name = "id_question")
     private Integer idQuestion;
     private String title;
+    private String typeOfExercise;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "question_id")
     private List<Option> options;
@@ -24,9 +25,10 @@ public class Question {
     public Question() {
     }
 
-    public Question(Integer idQuestion, String title, List<Option> options, CategoryEntity categoryEntity, EnglishLevel englishLevel) {
+    public Question(Integer idQuestion, String title, String typeOfExercise, List<Option> options, CategoryEntity categoryEntity, EnglishLevel englishLevel) {
         this.idQuestion = idQuestion;
         this.title = title;
+        this.typeOfExercise = typeOfExercise;
         this.options = options;
         this.categoryEntity = categoryEntity;
         this.englishLevel = englishLevel;
@@ -48,6 +50,14 @@ public class Question {
         this.title = title;
     }
 
+    public String getTypeOfExercise() {
+        return typeOfExercise;
+    }
+
+    public void setTypeOfExercise(String typeOfExercise) {
+        this.typeOfExercise = typeOfExercise;
+    }
+    
     public List<Option> getOptions() {
         return options;
     }
@@ -74,7 +84,8 @@ public class Question {
 
     @Override
     public String toString() {
-        return "Question{" + "idQuestion=" + idQuestion + ", title=" + title + ", options=" + options + ", categoryEntity=" + categoryEntity + ", englishLevel=" + englishLevel + '}';
+        return "Question{" + "idQuestion=" + idQuestion + ", title=" + title + ", typeOfExercise=" + typeOfExercise + ", options=" + options + ", categoryEntity=" + categoryEntity + ", englishLevel=" + englishLevel + '}';
     }
+
 
 }

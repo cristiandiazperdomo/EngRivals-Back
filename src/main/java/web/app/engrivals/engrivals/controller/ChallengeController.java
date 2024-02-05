@@ -1,9 +1,11 @@
 package web.app.engrivals.engrivals.controller;
 
+import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,10 +21,9 @@ public class ChallengeController {
     @Autowired
     ChallengeService challengeService;
     
-    @GetMapping("/{category_id}/{english_level_id}")
-    public Challenge create(@PathVariable("category_id") Integer category_id, @PathVariable("english_level_id") Integer english_level_id) {
-        System.out.println("CATEGORY_ID: " + category_id);
-        return challengeService.create(category_id, english_level_id);
+    @PostMapping("/{category_id}/{english_level_id}")
+    public Challenge create(@PathVariable("category_id") Integer category_id, @PathVariable("english_level_id") Integer english_level_id, @RequestBody HashMap<String, Boolean> conditions) {
+        return challengeService.create(category_id, english_level_id, conditions.get("isTheBrowserCompatibleWithAudio"));
     }
     
     @GetMapping("/{challenge_id}")
