@@ -15,6 +15,7 @@ import web.app.engrivals.engrivals.persistance.entities.Challenge;
 import web.app.engrivals.engrivals.persistance.entities.EnglishLevel;
 import web.app.engrivals.engrivals.persistance.entities.Option;
 import web.app.engrivals.engrivals.persistance.entities.OptionN;
+import web.app.engrivals.engrivals.persistance.entities.Points;
 import web.app.engrivals.engrivals.persistance.entities.Question;
 import web.app.engrivals.engrivals.persistance.entities.QuestionN;
 import web.app.engrivals.engrivals.persistance.repository.CategoryRepository;
@@ -41,8 +42,6 @@ public class ChallengeService {
     CategoryRepository categoryRepository;
     
     public Challenge create(Integer categoryId, Integer levelId, Boolean isTheBrowserCompatibleWithAudio) {
-        Challenge challenge = new Challenge();
-        
         Optional<CategoryEntity> category = categoryRepository.findById(categoryId);
         
         if (!category.isPresent()) {
@@ -55,26 +54,48 @@ public class ChallengeService {
             throw new EntityNotFoundException("No existe un nivel de inglés asociado a este id: " + levelId);
         }
         
+        Challenge challenge = new Challenge();
+        
         challenge.setTitle(level.get().getName() + ": " + category.get().getName());
         
         List<Question> questions;
         
         if (isTheBrowserCompatibleWithAudio) {
-            questions = questionRepository.findByCategoryEnglishLevelAndNoAudio(categoryId, levelId);
-        } else {
             questions = questionRepository.findByCategoryEnglishLevel(categoryId, levelId);
+        } else {
+            questions = questionRepository.findByCategoryEnglishLevelWithoutAudio(categoryId, levelId);
         }
+        
        
         List<QuestionN> questionsN = new ArrayList<>();
+        
+        Points points = new Points();
+        
+        points.setUserId("2");
+        points.setPoints(0);
+        
+        challenge.getPoints().add(points);
         
         for (Question question : questions) {
             QuestionN questionN = new QuestionN();
             
-            if (question.getTypeOfExercise().equals("translation")) {
-                int randomNumber = (int) (Math.random() * 5 + 1);
+            if (question.getTypeOfExercise().equals("multiple choice")) {
+                Integer amountOfExercises = isTheBrowserCompatibleWithAudio ? 3 : 2;
+                
+                int randomNumber = getRandomNumber(amountOfExercises, 1);
                 
                 questionN.setTypeOfExercise(question.getTypeOfExercise());
-                if (randomNumber == 3) questionN.setTypeOfExercise("writing");
+                if (randomNumber == 1) questionN.setTypeOfExercise("writing");
+                if (randomNumber == 2) questionN.setTypeOfExercise("translation");
+                if (randomNumber == 3) questionN.setTypeOfExercise("open question");
+                
+                Option correctOption = question.getOptions().stream().filter(option -> option.getIsCorrect()).findFirst().get();
+                
+                if (questionN.getTypeOfExercise().equals("writing") && correctOption.getIsCorrect() && correctOption.getName().split(" ").length <= 1) {
+                    Integer otherRandomNumber = getRandomNumber(amountOfExercises - 1, 1);
+                    if (otherRandomNumber == 1) questionN.setTypeOfExercise("translation");
+                    if (otherRandomNumber == 2) questionN.setTypeOfExercise("open question");
+                }
             } else {
                 questionN.setTypeOfExercise(question.getTypeOfExercise());
             }
@@ -100,6 +121,10 @@ public class ChallengeService {
                     optionN.setIsCorrect(option.getIsCorrect());
                     optionN.setName(option.getName());
                     optionsN.add(optionN);
+                } else {
+                    optionN.setIsCorrect(option.getIsCorrect());
+                    optionN.setName(option.getName());
+                    optionsN.add(optionN);
                 }
                 
             }
@@ -118,6 +143,10 @@ public class ChallengeService {
         return challenge;
     }
     
+    public int getRandomNumber(Integer max, Integer min) {
+        return (int) (Math.random() * max + 1);
+    }
+    
     public Challenge receiveAnswer(String challengeId, QuestionN questionN) {
         Optional<Challenge> response = challengeRepository.findById(challengeId);
         
@@ -132,20 +161,37 @@ public class ChallengeService {
             if (question.getId().equals(questionN.getId())) {
                 List<Answer> answers = question.getAnswers();
                 
-                if (answers.size() == 0) {
+                if (answers.isEmpty()) {
                     Boolean isRight = false;
+                    String correctAnswer = "";
          
                     for (OptionN optionN : question.getOptions()) {
                         if (optionN.getIsCorrect()) {
                             if (optionN.getName().equals(questionN.getAnswers().get(0).getAnswer())) {
                                 isRight = true;
                             }
+                            correctAnswer = optionN.getName();
                         }
                     }
                     
-                    questionN.getAnswers().get(0).setIsCorrect(isRight);
+                    if (!isRight) {
+                        for (OptionN optionN : question.getOptions()) {
+                            if (optionN.getIsCorrect()) optionN.setVisibleIsCorrect(isRight);
+                        }
+                    }
                     
-                    answers.add(questionN.getAnswers().get(0));
+                    Answer userAnswer = questionN.getAnswers().get(0);
+                    
+                    Points points = new Points();
+                    
+                    points.setPoints(challenge.getPoints().get(0).getPoints());
+                    
+                    if (isRight) challenge.getPoints().get(0).setPoints(points.getPoints() + 2);
+                    
+                    userAnswer.setIsCorrect(isRight);
+                    userAnswer.setCorrectAnswer(correctAnswer);
+                    
+                    answers.add(userAnswer);
                 } else {
                     Boolean hasAlreadyAnswer = false;
                     Answer saveAnswer = null;
@@ -163,7 +209,6 @@ public class ChallengeService {
                     if (!hasAlreadyAnswer) answers.add(saveAnswer);
                 }
                 question.setAnswers(answers);
-                
             }
         }
         

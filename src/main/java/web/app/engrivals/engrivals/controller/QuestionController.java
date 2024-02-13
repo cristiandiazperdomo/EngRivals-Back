@@ -37,6 +37,11 @@ public class QuestionController {
     public void build() {
         questionService.buildingScript();
     }
+    
+    @PostMapping("/save-all")
+    public ResponseEntity<List<Question>> saveAll(@RequestBody List<Question> questions) {
+        return new ResponseEntity<>(questionService.saveAll(questions), HttpStatus.OK);
+    }
 
 
 }

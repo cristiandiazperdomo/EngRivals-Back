@@ -6,6 +6,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.annotations.UuidGenerator;
 
@@ -17,17 +18,23 @@ public class Challenge {
     private String title;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "challenge_id")
+    private List<Points> points;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "challenge_id")
     private List<QuestionN> questions;
     private LocalDateTime creationTime;
 
     public Challenge() {
         this.creationTime = LocalDateTime.now();
+        this.points = new ArrayList<>();
     }
 
-    public Challenge(String title, List<QuestionN> questions) {
+    public Challenge(String id, String title, List<Points> points, List<QuestionN> questions, LocalDateTime creationTime) {
+        this.id = id;
         this.title = title;
+        this.points = points;
         this.questions = questions;
-        this.creationTime = LocalDateTime.now();
+        this.creationTime = creationTime;
     }
 
     public String getId() {
@@ -46,6 +53,14 @@ public class Challenge {
         this.title = title;
     }
 
+    public List<Points> getPoints() {
+        return points;
+    }
+
+    public void setPoints(List<Points> points) {
+        this.points = points;
+    }
+    
     public List<QuestionN> getQuestions() {
         return questions;
     }

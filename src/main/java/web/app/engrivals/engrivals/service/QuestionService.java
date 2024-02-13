@@ -17,6 +17,13 @@ public class QuestionService {
     public Optional<Question> getQuestion(Integer idQuestion){
         return questionRepository.findById(idQuestion);
     }
+    
+    public List<Question> saveAll(List<Question> questions) {
+        for (Question question : questions) {
+            questionRepository.save(question);
+        }
+        return questions;
+    }
 
     public Question save(Question questionDTO){
         return questionRepository.save(questionDTO);
@@ -36,26 +43,71 @@ public class QuestionService {
             if (question.getOptions().isEmpty()) return;
             //if (question.getOptions().size() <= 2) return;
             
-            System.out.println("");
-            System.out.println("");
-            String insertQuestion = """
-        INSERT INTO question (title, type_of_exercise, category_id_category, level_id_level) 
-        VALUES ("%s", "%s", %d, %d);
-        """.formatted(question.getTitle(), question.getTypeOfExercise(), question.getCategoryEntity().getId_category(), question.getEnglishLevel().getIdLevel());
-            System.out.println(insertQuestion);
-            System.out.println("");
-            System.out.println("-- Obtener el ID de la pregunta recién insertada");
-            System.out.println("SET @question_id = LAST_INSERT_ID();");
-            System.out.println("");
-            String insertOption = """
-        INSERT INTO options (is_correct, name, question_id) VALUES  (%s, "%s", @question_id), (%s, "%s", @question_id), (%s, "%s", @question_id);
-        """.formatted(
-                eval(question.getOptions().get(0).getIsCorrect()), question.getOptions().get(0).getName(),
-                eval(question.getOptions().get(1).getIsCorrect()), question.getOptions().get(1).getName(),
-                eval(question.getOptions().get(2).getIsCorrect()), question.getOptions().get(2).getName()
+            
+            
+            if (question.getOptions().size() == 2) {
+                System.out.println("");
+                System.out.println("");
+                String insertQuestion = """
+            INSERT INTO question (title, type_of_exercise, category_id_category, level_id_level) 
+            VALUES ("%s", "%s", %d, %d);
+            """.formatted(question.getTitle(), question.getTypeOfExercise(), question.getCategoryEntity().getId_category(), question.getEnglishLevel().getIdLevel());
+                System.out.println(insertQuestion);
+                System.out.println("");
+                System.out.println("-- Obtener el ID de la pregunta recién insertada");
+                System.out.println("SET @question_id = LAST_INSERT_ID();");
+                System.out.println("");
+                String insertOption = """
+            INSERT INTO options (is_correct, name, question_id) VALUES  (%s, "%s", @question_id), (%s, "%s", @question_id);
+            """.formatted(
+                    eval(question.getOptions().get(0).getIsCorrect()), question.getOptions().get(0).getName(),
+                    eval(question.getOptions().get(1).getIsCorrect()), question.getOptions().get(1).getName()
+            );
+                System.out.println(insertOption);
+                System.out.println("");
+
+            } else if (question.getOptions().size() == 3) {
+            
+                System.out.println("");
+                System.out.println("");
+                String insertQuestion = """
+            INSERT INTO question (title, type_of_exercise, category_id_category, level_id_level) 
+            VALUES ("%s", "%s", %d, %d);
+            """.formatted(question.getTitle(), question.getTypeOfExercise(), question.getCategoryEntity().getId_category(), question.getEnglishLevel().getIdLevel());
+                System.out.println(insertQuestion);
+                System.out.println("");
+                System.out.println("-- Obtener el ID de la pregunta recién insertada");
+                System.out.println("SET @question_id = LAST_INSERT_ID();");
+                System.out.println("");
+                String insertOption = """
+            INSERT INTO options (is_correct, name, question_id) VALUES  (%s, "%s", @question_id), (%s, "%s", @question_id), (%s, "%s", @question_id);
+            """.formatted(
+                    eval(question.getOptions().get(0).getIsCorrect()), question.getOptions().get(0).getName(),
+                    eval(question.getOptions().get(1).getIsCorrect()), question.getOptions().get(1).getName(),
+                    eval(question.getOptions().get(2).getIsCorrect()), question.getOptions().get(2).getName()
         );
             System.out.println(insertOption);
             System.out.println("");
+            } else {
+                System.out.println("");
+                System.out.println("");
+                String insertQuestion = """
+            INSERT INTO question (title, type_of_exercise, category_id_category, level_id_level) 
+            VALUES ("%s", "%s", %d, %d);
+            """.formatted(question.getTitle(), question.getTypeOfExercise(), question.getCategoryEntity().getId_category(), question.getEnglishLevel().getIdLevel());
+                System.out.println(insertQuestion);
+                System.out.println("");
+                System.out.println("-- Obtener el ID de la pregunta recién insertada");
+                System.out.println("SET @question_id = LAST_INSERT_ID();");
+                System.out.println("");
+                String insertOption = """
+            INSERT INTO options (is_correct, name, question_id) VALUES  (%s, "%s", @question_id);
+            """.formatted(
+                    eval(question.getOptions().get(0).getIsCorrect()), question.getOptions().get(0).getName());
+            System.out.println(insertOption);
+            System.out.println("");
+            }
+            
             String getIds = """
             -- Obtener los IDs de las opciones recién insertadas
             SET @option_id_A = LAST_INSERT_ID(); 
