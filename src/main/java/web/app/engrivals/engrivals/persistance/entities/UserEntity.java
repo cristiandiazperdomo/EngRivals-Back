@@ -2,13 +2,24 @@ package web.app.engrivals.engrivals.persistance.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
+import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "user", uniqueConstraints = {@UniqueConstraint(columnNames = {"email"})})
-public class UserEntity {
+@Getter
+@Setter
+@AllArgsConstructor
+@Builder
+@ToString
+public class UserEntity implements UserDetails {
   @Id
   @UuidGenerator
   @Column(name = "id_user")
@@ -16,6 +27,8 @@ public class UserEntity {
   private String name;
   private String profile_url;
   private String email;
+  @Enumerated(EnumType.STRING)
+  private Role role;
   @JsonIgnore
   private String password;
   @Column(columnDefinition = "DATE")
@@ -44,82 +57,32 @@ public class UserEntity {
     this.englishLevel_id_level = englishLevel_id_level;
   }
 
-  public String getId() {
-    return id;
+  @Override
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    return List.of(new SimpleGrantedAuthority(role.name()));
   }
-
-  public void setId(String id) {
-    this.id = id;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public String getProfile_url() {
-    return profile_url;
-  }
-
-  public void setProfile_url(String profile_url) {
-    this.profile_url = profile_url;
-  }
-
-  public String getEmail() {
+  @Override
+  public String getUsername() {
     return email;
   }
 
-  public void setEmail(String email) {
-    this.email = email;
+  @Override
+  public boolean isAccountNonExpired() {
+    return true;
   }
 
-  public String getPassword() {
-    return password;
+  @Override
+  public boolean isAccountNonLocked() {
+    return true;
   }
 
-  public void setPassword(String password) {
-    this.password = password;
+  @Override
+  public boolean isCredentialsNonExpired() {
+    return true;
   }
 
-  public LocalDate getBirthdate() {
-    return birthdate;
+  @Override
+  public boolean isEnabled() {
+    return true;
   }
-
-  public void setBirthdate(LocalDate birthdate) {
-    this.birthdate = birthdate;
-  }
-
-  public LocalDate getCreation_date() {
-    return creation_date;
-  }
-
-  public void setCreation_date(LocalDate creation_date) {
-    this.creation_date = creation_date;
-  }
-
-    public Integer getScore() {
-        return score;
-    }
-
-    public void setScore(Integer score) {
-        this.score = score;
-    }
-
-  public EnglishLevel getEnglishLevel_id_level() {
-    return englishLevel_id_level;
-  }
-
-  public void setEnglishLevel_id_level(EnglishLevel englishLevel_id_level) {
-    this.englishLevel_id_level = englishLevel_id_level;
-  }
-
-    @Override
-    public String toString() {
-        return "UserEntity{" + "id=" + id + ", name=" + name + ", profile_url=" + profile_url + ", email=" + email + ", password=" + password + ", birthdate=" + birthdate + ", creation_date=" + creation_date + ", score=" + score + ", englishLevel_id_level=" + englishLevel_id_level + '}';
-    }
-  
-  
 }

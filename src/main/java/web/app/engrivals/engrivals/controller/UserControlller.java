@@ -30,10 +30,10 @@ public class UserControlller {
         return userService.create(userDTO);
     }
     
-    @PutMapping
-    public UserEntity update(@RequestBody UserDTO user) {
-        return userService.update(user);
-    }
+//    @PutMapping
+//    public UserEntity update(@RequestBody UserDTO user) {
+//        return userService.update(user);
+//    }
     
     @DeleteMapping("/{id}")
     public void delete(@PathVariable String id) {

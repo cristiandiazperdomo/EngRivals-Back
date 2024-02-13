@@ -46,26 +46,26 @@ public class UserService {
         return userOptional.get();
     }
     
-    public UserEntity update(UserDTO userDTO) {
-        existById(userDTO.getId());
-
-        UserEntity user = userRepo.findById(userDTO.getId()).get();
-        
-        user.setName(userDTO.getName());
-        user.setProfile_url(userDTO.getProfile_url());
-        user.setEmail(userDTO.getEmail());
-        user.setBirthdate(userDTO.getBirthdate());
-        
-        Optional<EnglishLevel> level = levelRepository.findById(userDTO.getLevel_id_level().getIdLevel());
-        
-        if (!level.isPresent()) {
-            throw new EntityNotFoundException("No existe un nivel de inglés asociado a este id: " + userDTO.getLevel_id_level().getIdLevel());
-        }
-        
-        user.setEnglishLevel_id_level(level.get());
-
-        return userRepo.save(user);
-    }
+//    public UserEntity update(UserDTO userDTO) {
+//        existById(userDTO.getId());
+//
+//        UserEntity user = userRepo.findById(userDTO.getId()).get();
+//
+//        user.setName(userDTO.getName());
+//        user.setProfile_url(userDTO.getProfile_url());
+//        user.setEmail(userDTO.getEmail());
+//        user.setBirthdate(userDTO.getBirthdate());
+//
+//        Optional<EnglishLevel> level = levelRepository.findById(userDTO.getLevel_id_level().getIdLevel());
+//
+//        if (!level.isPresent()) {
+//            throw new EntityNotFoundException("No existe un nivel de inglés asociado a este id: " + userDTO.getLevel_id_level().getIdLevel());
+//        }
+//
+//        user.setEnglishLevel_id_level(level.get());
+//
+//        return userRepo.save(user);
+//    }
 
     private void existById(String id) {
         boolean isExist = userRepo.existsById(id);
