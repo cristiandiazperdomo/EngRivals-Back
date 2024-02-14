@@ -90,26 +90,25 @@ public class ChallengeService {
         for (Question question : questions) {
             QuestionN questionN = new QuestionN();
             
-            if (question.getTypeOfExercise().equals("multiple choice")) {
-                Integer amountOfExercises = isTheBrowserCompatibleWithAudio ? 3 : 2;
-                
-                int randomNumber = getRandomNumber(amountOfExercises, 1);
-                
-                questionN.setTypeOfExercise(question.getTypeOfExercise());
+            Integer amountOfExercises = isTheBrowserCompatibleWithAudio ? 4 : 2;
+
+            int randomNumber = getRandomNumber(amountOfExercises, 1);
+
+            questionN.setTypeOfExercise(question.getTypeOfExercise());
+            
+            if (!questionN.getTypeOfExercise().equals("writing")) {
                 if (randomNumber == 1) questionN.setTypeOfExercise("writing");
-                if (randomNumber == 2) questionN.setTypeOfExercise("translation");
-                if (randomNumber == 3) questionN.setTypeOfExercise("open question");
-                
-                Option correctOption = question.getOptions().stream().filter(option -> option.getIsCorrect()).findFirst().get();
-                
-                if (questionN.getTypeOfExercise().equals("writing") && correctOption.getIsCorrect() && correctOption.getName().split(" ").length <= 1) {
-                    Integer otherRandomNumber = getRandomNumber(amountOfExercises - 1, 1);
-                    if (otherRandomNumber == 1) questionN.setTypeOfExercise("translation");
-                    if (otherRandomNumber == 2) questionN.setTypeOfExercise("open question");
-                }
-            } else {
-                questionN.setTypeOfExercise(question.getTypeOfExercise());
-            } // PUEDE QUE ESTE CONDICIONLA ME DE OPEN QUESTION POR EL IF
+                if (randomNumber == 2 || randomNumber == 3) questionN.setTypeOfExercise("translation");
+                if (randomNumber == 4) questionN.setTypeOfExercise("open question");
+            }
+
+            Option correctOption = question.getOptions().stream().filter(option -> option.getIsCorrect()).findFirst().get();
+
+            if (questionN.getTypeOfExercise().equals("writing") && correctOption.getIsCorrect() && correctOption.getName().split(" ").length <= 1) {
+                Integer otherRandomNumber = getRandomNumber(amountOfExercises - 1, 1);
+                if (otherRandomNumber == 1) questionN.setTypeOfExercise("translation");
+                if (otherRandomNumber == 2) questionN.setTypeOfExercise("open question");
+            }
                 
             questionN.setOriginQuestionId(question.getIdQuestion());
             
@@ -182,7 +181,6 @@ public class ChallengeService {
                     throw new EntityNotFoundException("No se encontro un desafío con ese ID: " + challengeId);
                 }
                 
-                
                 challenge = response.get();
                 
                 if (challenge.getPlayers().size() == 2) return null;
@@ -193,7 +191,15 @@ public class ChallengeService {
                 player.setPoints(0);
 
                 challenge.getPlayers().add(player);
-
+                
+                LocalDateTime currentTime = LocalDateTime.now();
+                
+                System.out.println("CURRENT TIME: " + currentTime);
+                
+                challenge.setCreationTime(currentTime.plusSeconds(10));
+                
+                System.out.println("CURRENT TIME: " + currentTime.plusSeconds(10));
+                
                 challengeRepository.save(challenge);
                 
                 challenges.remove(challengeStatus);
@@ -368,6 +374,7 @@ public class ChallengeService {
         LocalDateTime creationTime = challenge.getCreationTime();
         
         creationTime.plusMinutes(1);
+        creationTime.plusSeconds(10);
         
         Boolean isEqual = creationTime.equals(currentTime);
         Boolean isAfter = currentTime.isAfter(creationTime);
