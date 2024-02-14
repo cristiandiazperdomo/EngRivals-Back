@@ -12,7 +12,7 @@ public class Question {
     private Integer idQuestion;
     private String title;
     private String typeOfExercise;
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "question_id")
     private List<Option> options;
     @ManyToOne

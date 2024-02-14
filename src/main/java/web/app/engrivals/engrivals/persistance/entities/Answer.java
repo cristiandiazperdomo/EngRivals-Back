@@ -87,7 +87,7 @@ public class Answer {
 
     @Override
     public String toString() {
-        return "Answer{" + "id=" + id + ", answer=" + answer + ", correctAnswer=" + correctAnswer + ", isCorrect=" + isCorrect + ", userId=" + userId + ", questionId=" + questionId + '}';
+        return "Answer{" + "id=" + id + ", answer=" + answer + ", correctAnswer=" + correctAnswer + ", isCorrect=" + isCorrect + ", userId=" + userId + '}';
     }
 
 }

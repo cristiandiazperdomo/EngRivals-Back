@@ -2,6 +2,7 @@ package web.app.engrivals.engrivals.persistance.entities;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
@@ -16,23 +17,23 @@ public class Challenge {
     @UuidGenerator
     private String id;
     private String title;
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "challenge_id")
-    private List<Points> points;
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Player> players;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "challenge_id")
     private List<QuestionN> questions;
     private LocalDateTime creationTime;
 
     public Challenge() {
         this.creationTime = LocalDateTime.now();
-        this.points = new ArrayList<>();
+        this.players = new ArrayList<>();
     }
 
-    public Challenge(String id, String title, List<Points> points, List<QuestionN> questions, LocalDateTime creationTime) {
+    public Challenge(String id, String title, List<Player> players, List<QuestionN> questions, LocalDateTime creationTime) {
         this.id = id;
         this.title = title;
-        this.points = points;
+        this.players = players;
         this.questions = questions;
         this.creationTime = creationTime;
     }
@@ -53,12 +54,12 @@ public class Challenge {
         this.title = title;
     }
 
-    public List<Points> getPoints() {
-        return points;
+    public List<Player> getPlayers() {
+        return players;
     }
 
-    public void setPoints(List<Points> points) {
-        this.points = points;
+    public void setPlayers(List<Player> players) {
+        this.players = players;
     }
     
     public List<QuestionN> getQuestions() {

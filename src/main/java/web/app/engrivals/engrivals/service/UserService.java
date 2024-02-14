@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import web.app.engrivals.engrivals.persistance.entities.UserEntity;
 import web.app.engrivals.engrivals.persistance.repository.UserRepository;
 
-import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import web.app.engrivals.engrivals.Dtos.UserDTO;
@@ -29,21 +28,20 @@ public class UserService {
 
         return userRepo.save(user);
     }
-    public List<UserEntity> getAll(){
-        return userRepo.findAll();
-    }
     
     public void deleteById(String id) {
         existById(id);
         userRepo.deleteById(id);
     }
     
-    public UserEntity findById(String id) {
-        Optional<UserEntity> userOptional = userRepo.findById(id);
-        if (userOptional.isEmpty()) {
-            throw new EntityNotFoundException("no existe un usuario con id: " + id);
+    public UserEntity findById(String userId) {
+        Optional<UserEntity> userResponse = userRepo.findById(userId);
+        
+        if (!userResponse.isPresent()) {
+            throw new EntityNotFoundException("El usuario con el id: "  + userId + " no existe.");
         }
-        return userOptional.get();
+        
+        return userResponse.get();
     }
     
     public UserEntity update(UserDTO userDTO) {

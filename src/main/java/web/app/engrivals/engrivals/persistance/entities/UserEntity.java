@@ -22,6 +22,7 @@ public class UserEntity {
   private LocalDate birthdate;
   @Column(columnDefinition = "DATETIME")
   private LocalDate creation_date;
+  private Integer numberOfGamesWon;
   private Integer score;
   @ManyToOne
   @JoinColumn(name = "level_id_level")
@@ -29,20 +30,22 @@ public class UserEntity {
 
   public UserEntity() {
     this.creation_date = LocalDate.now();
+    this.numberOfGamesWon = 0;
     this.score = 0;
   }
 
-  public UserEntity(String id, String name, String profile_url, String email, String password, LocalDate birthdate, EnglishLevel englishLevel_id_level) {
-    this.id = id;
-    this.name = name;
-    this.profile_url = profile_url;
-    this.email = email;
-    this.password = password;
-    this.birthdate = birthdate;
-    this.creation_date = LocalDate.now();
-    this.score = 0;
-    this.englishLevel_id_level = englishLevel_id_level;
-  }
+    public UserEntity(String id, String name, String profile_url, String email, String password, LocalDate birthdate, LocalDate creation_date, Integer numberOfGamesWon, Integer score, EnglishLevel englishLevel_id_level) {
+        this.id = id;
+        this.name = name;
+        this.profile_url = profile_url;
+        this.email = email;
+        this.password = password;
+        this.birthdate = birthdate;
+        this.creation_date = LocalDate.now();
+        this.numberOfGamesWon = 0;
+        this.score = 0;
+        this.englishLevel_id_level = englishLevel_id_level;
+    }
 
   public String getId() {
     return id;
@@ -100,6 +103,14 @@ public class UserEntity {
     this.creation_date = creation_date;
   }
 
+    public Integer getNumberOfGamesWon() {
+        return numberOfGamesWon;
+    }
+
+    public void setNumberOfGamesWon(Integer numberOfGamesWon) {
+        this.numberOfGamesWon = numberOfGamesWon;
+    }
+  
     public Integer getScore() {
         return score;
     }
