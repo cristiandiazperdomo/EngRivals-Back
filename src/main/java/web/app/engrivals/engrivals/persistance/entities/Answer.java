@@ -15,6 +15,7 @@ public class Answer {
     @UuidGenerator
     private String id;    
     private String answer;
+    private String correctAnswer;
     @Column(columnDefinition = "TINYINT")
     @JsonProperty("isCorrect")
     private Boolean isCorrect;
@@ -27,10 +28,13 @@ public class Answer {
     public Answer() {
     }
 
-    public Answer(String id, String answer, String userId) {
+    public Answer(String id, String answer, String correctAnswer, Boolean isCorrect, String userId, QuestionN questionId) {
         this.id = id;
         this.answer = answer;
+        this.correctAnswer = correctAnswer;
+        this.isCorrect = isCorrect;
         this.userId = userId;
+        this.questionId = questionId;
     }
 
     public String getId() {
@@ -49,6 +53,14 @@ public class Answer {
         this.answer = answer;
     }
 
+    public String getCorrectAnswer() {
+        return correctAnswer;
+    }
+
+    public void setCorrectAnswer(String correctAnswer) {
+        this.correctAnswer = correctAnswer;
+    }
+    
     public Boolean getIsCorrect() {
         return isCorrect;
     }
@@ -75,7 +87,7 @@ public class Answer {
 
     @Override
     public String toString() {
-        return "Answer{" + "id=" + id + ", answer=" + answer + ", isCorrect=" + isCorrect + ", userId=" + userId + '}';
+        return "Answer{" + "id=" + id + ", answer=" + answer + ", correctAnswer=" + correctAnswer + ", isCorrect=" + isCorrect + ", userId=" + userId + '}';
     }
 
 }

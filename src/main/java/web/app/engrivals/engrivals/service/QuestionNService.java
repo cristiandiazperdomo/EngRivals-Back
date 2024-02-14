@@ -36,4 +36,19 @@ public class QuestionNService {
         return questionRepository.save(question);
     }
     
+    public Map<String, String> deleteQuestion(QuestionN questionN) {
+        Optional<Question> response = questionRepository.findById(questionN.getOriginQuestionId());
+        
+        if (!response.isPresent()) {
+            throw new EntityNotFoundException("La pregunta no fue encontrada");
+        }
+        
+        questionRepository.deleteById(response.get().getIdQuestion());
+        
+        HashMap<String, String> status = new HashMap<>();
+        
+        status.put("status", "Eliminada");
+        
+        return status;
+    }
 }

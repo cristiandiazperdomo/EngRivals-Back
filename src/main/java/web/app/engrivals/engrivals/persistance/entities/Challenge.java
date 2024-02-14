@@ -2,10 +2,12 @@ package web.app.engrivals.engrivals.persistance.entities;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.annotations.UuidGenerator;
 
@@ -15,19 +17,25 @@ public class Challenge {
     @UuidGenerator
     private String id;
     private String title;
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JoinColumn(name = "challenge_id")
+    private List<Player> players;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "challenge_id")
     private List<QuestionN> questions;
     private LocalDateTime creationTime;
 
     public Challenge() {
         this.creationTime = LocalDateTime.now();
+        this.players = new ArrayList<>();
     }
 
-    public Challenge(String title, List<QuestionN> questions) {
+    public Challenge(String id, String title, List<Player> players, List<QuestionN> questions, LocalDateTime creationTime) {
+        this.id = id;
         this.title = title;
+        this.players = players;
         this.questions = questions;
-        this.creationTime = LocalDateTime.now();
+        this.creationTime = creationTime;
     }
 
     public String getId() {
@@ -46,6 +54,14 @@ public class Challenge {
         this.title = title;
     }
 
+    public List<Player> getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(List<Player> players) {
+        this.players = players;
+    }
+    
     public List<QuestionN> getQuestions() {
         return questions;
     }
